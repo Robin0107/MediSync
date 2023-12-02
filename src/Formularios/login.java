@@ -1,152 +1,54 @@
-package Formularios;
+package formulario;
 
 
-import Formularios.mensajes_emergentes.login_error;
-import Formularios.mensajes_emergentes.login_incorrecto;
-import Formularios.mensajes_emergentes.login_rellenar;
-import static Formularios.menu.MenuPlegable;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import java.sql.*;
-import clases.Conectar;
-import java.awt.Window;
-import java.util.Arrays;
-import javax.swing.JFrame;
-import clases.encoder;
-import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JTextField;
+import poo_oym2019.conexion;
 
 public class login extends javax.swing.JFrame {
-    Conectar cc = new Conectar();
-    Connection cn = (Connection) cc.conexion();
-    
-    public static int idEmpleado;
-    public static String empleado;
-    public static int idrolusuario;
+    conexion cc = new conexion();
+    Connection cn = cc.getConnection();
     public login() {
         initComponents();
-        closeAllFormsExceptLogin();
-        
     }
-  
-private void closeAllFormsExceptLogin() {
-    for (Window window : Window.getWindows()) {
-        if (window instanceof JFrame && window != this) {
-            JFrame frame = (JFrame) window;
-            frame.dispose();
-        }
-    }
-}
- 
-
-  public void iniciarsesion() {
-        if (txtUsuario.getText().isEmpty() || txtContrasena.getText().isEmpty()) {
-            new login_rellenar().setVisible(true);
-        } else {
-            String usuario = txtUsuario.getText();
-            encoder ec = new encoder();
-            String contrasena = ec.ecnode(txtContrasena.getText());
-
-            String query = "SELECT id_usuarios,id_empleados, id_roles_usuarios, contrasena FROM usuarios WHERE usuario = ? and contrasena = ? and estado = 1";
-
-            try (PreparedStatement statement = cn.prepareStatement(query)) {
-                statement.setString(1, usuario);
-                statement.setString(2, contrasena);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    if (rs.next()) {
-                        idrolusuario = rs.getInt("id_roles_usuarios");
-                        idEmpleado = rs.getInt("id_empleados");
-                        new menu().setVisible(true);
-                        this.dispose();
-                    } else {
-                        new login_incorrecto().setVisible(true);
-                    }
-                }
-                
-            } catch (SQLException error) {
-                JOptionPane.showMessageDialog(null, "SUCEDIO UN ERROR AL INICIAR SESIÓN: " + error.getMessage());
-            }
-        }
-    }
-
-
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        menulogin = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         txtContrasena = new javax.swing.JPasswordField();
-        btniniciarsesion = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         salir = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        menulogin.setBackground(new java.awt.Color(0, 147, 214));
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("USUARIO");
 
-        txtUsuario.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuarioActionPerformed(evt);
-            }
-        });
-        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtUsuarioKeyReleased(evt);
-            }
-        });
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("CONTRASEÑA");
 
-        txtContrasena.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setBackground(new java.awt.Color(255, 0, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("INICIAR SECCION");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtContrasenaActionPerformed(evt);
-            }
-        });
-        txtContrasena.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtContrasenaKeyReleased(evt);
+                jButton1ActionPerformed(evt);
             }
         });
 
-        btniniciarsesion.setBackground(new java.awt.Color(12, 93, 173));
-        btniniciarsesion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btniniciarsesion.setForeground(new java.awt.Color(255, 255, 255));
-        btniniciarsesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/iniciar-sesion.png"))); // NOI18N
-        btniniciarsesion.setText("  INICIAR SECCION");
-        btniniciarsesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btniniciarsesionActionPerformed(evt);
-            }
-        });
-        btniniciarsesion.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                btniniciarsesionKeyPressed(evt);
-            }
-        });
-
-        salir.setBackground(new java.awt.Color(204, 0, 0));
+        salir.setBackground(new java.awt.Color(255, 0, 0));
         salir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         salir.setForeground(new java.awt.Color(255, 255, 255));
-        salir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/cerrar-sesion (1).png"))); // NOI18N
         salir.setText("SALIR");
         salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,134 +56,82 @@ private void closeAllFormsExceptLogin() {
             }
         });
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/usuario.png"))); // NOI18N
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("INICIAR CON CODIGO");
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel5MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout menuloginLayout = new javax.swing.GroupLayout(menulogin);
-        menulogin.setLayout(menuloginLayout);
-        menuloginLayout.setHorizontalGroup(
-            menuloginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuloginLayout.createSequentialGroup()
-                .addGroup(menuloginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(menuloginLayout.createSequentialGroup()
-                        .addGroup(menuloginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(menuloginLayout.createSequentialGroup()
-                                .addGap(114, 114, 114)
-                                .addComponent(jLabel3))
-                            .addGroup(menuloginLayout.createSequentialGroup()
-                                .addGap(77, 77, 77)
-                                .addGroup(menuloginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btniniciarsesion, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))))
-                        .addGap(0, 85, Short.MAX_VALUE))
-                    .addGroup(menuloginLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(salir)))
-                .addContainerGap())
-            .addGroup(menuloginLayout.createSequentialGroup()
-                .addGap(108, 108, 108)
-                .addComponent(jLabel5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                        .addComponent(salir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
-        menuloginLayout.setVerticalGroup(
-            menuloginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, menuloginLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(btniniciarsesion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(29, 29, 29)
                 .addComponent(salir)
-                .addGap(20, 20, 20))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
-        getContentPane().add(menulogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 0, -1, 410));
-
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/logo empresa.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(115, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addGap(104, 104, 104))
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-4, 0, 390, 410));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btniniciarsesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btniniciarsesionActionPerformed
- iniciarsesion();
-    }//GEN-LAST:event_btniniciarsesionActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(txtUsuario.getText().equals("") || txtContrasena.getText().equals("")){
+            JOptionPane.showMessageDialog(null, "DEBE RELLENAR TODOS LOS CAMPOS");
+        } else {
+            String usuario = txtUsuario.getText();
+            String contrasena = txtContrasena.getText();
+            String query = "SELECT id, usuario, contrasena FROM usuarios WHERE usuario = '" + usuario + "' and contrasena = '" + contrasena + "' and estado = 1";
+            try{
+                Statement st = cn.createStatement();
+                ResultSet rs = st.executeQuery(query);
+                if(rs.next()){
+                    new menu().setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "DATOS INCORRECTOS");
+                }
+            } catch(HeadlessException | SQLException error){
+                JOptionPane.showMessageDialog(null, "SUCEDIO UN ERROR AL INICIAR SECCION: " + error);
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
       this.dispose();
     }//GEN-LAST:event_salirActionPerformed
-
-    private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
-     
-    }//GEN-LAST:event_txtUsuarioActionPerformed
-
-    private void btniniciarsesionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btniniciarsesionKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btniniciarsesionKeyPressed
-
-    private void txtContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaActionPerformed
-   
-        
-    }//GEN-LAST:event_txtContrasenaActionPerformed
-
-    private void txtContrasenaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContrasenaKeyReleased
-     if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        iniciarsesion();
-    }
-    }//GEN-LAST:event_txtContrasenaKeyReleased
-
-    private void txtUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyReleased
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        iniciarsesion();
-    }
-    }//GEN-LAST:event_txtUsuarioKeyReleased
-
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-       this.dispose();
-        new login_codigo().setVisible(true);
-    }//GEN-LAST:event_jLabel5MouseClicked
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -306,8 +156,6 @@ private void closeAllFormsExceptLogin() {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -318,16 +166,12 @@ private void closeAllFormsExceptLogin() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btniniciarsesion;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel menulogin;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JButton salir;
-    public static javax.swing.JPasswordField txtContrasena;
-    public static javax.swing.JTextField txtUsuario;
+    private javax.swing.JPasswordField txtContrasena;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }
