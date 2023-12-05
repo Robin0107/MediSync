@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Blob;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -522,6 +523,9 @@ void cargar_datos() {
         jPanel3.setPreferredSize(new java.awt.Dimension(250, 230));
         jPanel3.setRequestFocusEnabled(false);
         jPanel3.setLayout(new java.awt.BorderLayout());
+
+        labelfoto.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        labelfoto.setForeground(new java.awt.Color(12, 93, 172));
         jPanel3.add(labelfoto, java.awt.BorderLayout.PAGE_START);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -785,21 +789,58 @@ cargar_datos();
     }//GEN-LAST:event_concentracionActionPerformed
 
     private void tabla_productosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_productosMouseClicked
-     int fila= tabla_productos.getSelectedRow();
-     if(fila>=0){
-        DefaultTableModel table_model = (DefaultTableModel)tabla_productos.getModel();
-        String id_tipo = (String) table_model.getValueAt(tabla_productos.getSelectedRow(), 11); 
-        try{ 
-            String query = "SELECT * FROM tipos_productos WHERE nombre = '" + id_tipo + "'";
-            PreparedStatement pst = cn.prepareStatement(query);
-            ResultSet rst = pst.executeQuery();
-            rst.next();
-            tipo.setSelectedItem(rst.getString("nombre"));
-        } catch(Exception error){
-            JOptionPane.showMessageDialog(null, "Error: "+error);
+int fila = tabla_productos.getSelectedRow();
+if (fila >= 0) {
+    DefaultTableModel table_model = (DefaultTableModel) tabla_productos.getModel();
+
+    // Obtener el id_tipo
+    String id_tipo = (String) table_model.getValueAt(tabla_productos.getSelectedRow(), 11);
+    try {
+        String queryTipo = "SELECT * FROM tipos_productos WHERE nombre = ?";
+        try (PreparedStatement pstTipo = cn.prepareStatement(queryTipo)) {
+            pstTipo.setString(1, id_tipo);
+            ResultSet rstTipo = pstTipo.executeQuery();
+            
+            if (rstTipo.next()) {
+                tipo.setSelectedItem(rstTipo.getString("nombre"));
+            }
         }
+    } catch (SQLException error) {
+        JOptionPane.showMessageDialog(null, "Error al obtener el tipo: " + error.getMessage());
+    }
+
+    // Obtener el id_imagen
+    String id_imagen = (String) table_model.getValueAt(tabla_productos.getSelectedRow(), 0);
+    try {
+        String queryImagen = "SELECT imagen FROM productos WHERE id_productos = ?";
+        try (PreparedStatement pstImagen = cn.prepareStatement(queryImagen)) {
+            pstImagen.setString(1, id_imagen);
+            
+            try (ResultSet rs = pstImagen.executeQuery()) {
+                if (rs.next()) {
+                    Blob blob = rs.getBlob("imagen");
+
+                    if (blob != null) {
+                        byte[] bytes = blob.getBytes(1, (int) blob.length());
+                        ImageIcon imagen = new ImageIcon(bytes);
+                        Image image = imagen.getImage().getScaledInstance(230, 200, Image.SCALE_SMOOTH);
+                        labelfoto.setIcon(new ImageIcon(image));
+                    } else {
+                        labelfoto.setIcon(null);
+//                        JOptionPane.showMessageDialog(null, "No hay imagen para cargar.");
+                            labelfoto.setText("NO HAY IMAGEN");
+                    }
+                }
+            }
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Error al cargar la imagen: " + ex.getMessage());
+    }
+
         String presentacionseleccionado = (String) table_model.getValueAt(tabla_productos.getSelectedRow(), 7);
        presentacion.setSelectedItem(presentacionseleccionado);
+               String seguroseleccionado = (String) table_model.getValueAt(tabla_productos.getSelectedRow(), 14);
+       seguro.setSelectedItem(seguroseleccionado);
     id_productos.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(), 0));
     nombre_comercial.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(),3));
     codigo_sugemi.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(), 1));
@@ -809,8 +850,10 @@ cargar_datos();
     precio_compra.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(), 9));
     precio_venta.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(), 10));
     concentracion.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(), 6));
+    itbis.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(), 12));
+    reorden.setText((String) table_model.getValueAt(tabla_productos.getSelectedRow(), 13));
      }
-     cargar_imagen();
+    
     }//GEN-LAST:event_tabla_productosMouseClicked
 
     private void LIMPIAR1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LIMPIAR1ActionPerformed
